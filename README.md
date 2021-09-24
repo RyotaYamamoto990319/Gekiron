@@ -71,7 +71,7 @@ docker-compose run --rm app npx sequelize-cli db:seed:all
 ```sh
 docker-compose up -d
 ```
-でコンテナを起動し，以下のコマンドを入力すると，mysqlを起動できる．
+でコンテナを起動し，以下のコマンドを入力すると，mysqlを起動できる．パスワードは"password1234"．
 ```sh
 docker-compose exec mysql mysql -uroot -p
 ```
