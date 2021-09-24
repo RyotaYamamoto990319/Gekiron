@@ -28,7 +28,7 @@ docker-compose up -d
 コマンドパレットを開き，"Remote-Containers: Open Folder in Container..."を選ぶ．".devcontainer"を含むディレクトリで"open"を押す．
 
 ### Build
-VSCode上でDockerコンテナに接続したあと，Terminalで以下のコマンドでWebpackのビルド．
+VSCode上でDockerコンテナに接続したあと，Terminalを開き，Webpackのビルド．
 ```sh
 npm run build
 ```
@@ -55,7 +55,7 @@ docker-compose run --rm app npx sequelize-cli db:migrate:undo:all
 ```
 
 ### Run DB migration
-Geshuku直下の位置で，DBマイグレーションを実行
+DBマイグレーションを実行
 ```sh
 docker-compose run --rm app npx sequelize-cli db:migrate
 ```
