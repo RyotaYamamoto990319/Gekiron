@@ -7,7 +7,7 @@ class Guest extends React.Component {
         super(props);
         this.socket = io('localhost:3000');
         const query = queryString.parse(this.props.location.search);
-        this.state = { view: 0, roomid:query.roomid, players:[]};
+        this.state = { view: 0, roomid:query.roomid, players:[], theme:""};
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAnswer = this.handleAnswer.bind(this);
     }
@@ -24,9 +24,11 @@ class Guest extends React.Component {
         // ゲーム開始
         this.socket.on('startGame', (data) => {
             this.setState({ players: data.players }, () => {
-                this.setState({ view: 2 });
+                this.setState({ theme: data.theme }, () => {
+                    this.setState({ view: 2 });
+                });
             });
-        })
+        });
 
         // 答えを受け取る
         this.socket.on('sendAns', (data) => {
@@ -35,9 +37,10 @@ class Guest extends React.Component {
             for (let i=0; i<update_players.length; i++) {
                 if (update_players[i].id == data.playerid) {
                     update_players[i].answer = data.answer;
-                    const player = update_players[i];
-                    update_players.splice(i);
-                    update_players.unshift(player);
+                    const update_player = update_players[i];
+                    console.log(update_player);
+                    update_players.splice(i, 1);
+                    update_players.unshift(update_player);
                     break;
                 }
             }
@@ -111,7 +114,8 @@ class Guest extends React.Component {
             case 2:
                 console.log('ゲーム開始');
                 return (
-                    <><table>
+                    <><h2>{this.state.theme}</h2>
+                    <table>
                         {this.setPlayerTexts()}
                     </table>
                     <form>

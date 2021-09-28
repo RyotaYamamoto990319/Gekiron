@@ -7,7 +7,19 @@ export default class SignUp extends React.Component {
         if (myform.password.value === myform.re_password.value) {
             userSignUp(myform.mailaddress.value, myform.password.value, function(user) {
                 console.log(user);
-                window.location.href = '/main';
+
+                fetch('/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: myform.username.value,
+                        email: myform.mailaddress.value,
+                    })
+                }).then((res) => {
+                    window.location.href = '/main';
+                });
             });
         } else {
             alert('パスワードが一致しません');
@@ -22,6 +34,9 @@ export default class SignUp extends React.Component {
                 <form id = "myform">
                     <div class="input">
                         メールアドレス<input name="mailaddress" type="mailAddress" required/>
+                    </div>
+                    <div class="input">
+                        ユーザ名<input name="username" type="text" required/>
                     </div>
                     <div class="input">
                         パスワード<input name="password" type="password" required/>

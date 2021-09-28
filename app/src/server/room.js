@@ -23,11 +23,12 @@ function webSocket(server) {
         });
 
         socket.on('setStart', (data) => {
+            console.log(data);
             for (let i=0; i<rooms[data.roomid].length; i++) {
                 rooms[data.roomid][i].answer = "";
             }
             rooms[data.roomid].map((player) => {
-                io.to(player.id).emit('startGame', {　players: rooms[data.roomid]　});
+                io.to(player.id).emit('startGame', {　players: rooms[data.roomid], theme: data.theme });
             });
         });
 

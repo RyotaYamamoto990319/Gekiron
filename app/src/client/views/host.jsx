@@ -1,12 +1,13 @@
 import React from "react";
 import { io } from "socket.io-client";
+import { getUser } from "../functions/firebase-auth";
 
 class Host extends React.Component {
 
     constructor(props) {
         super(props);
         this.socket = io('localhost:3000');
-        this.state = {view:1, roomid:"", roomURL:"", players:[]};
+        this.state = {view:1, roomid:"", roomURL:"", players:[], themeid:0, theme:""};
         this.setStart = this.setStart.bind(this);
         this.openAns = this.openAns.bind(this);
         this.handleAnswer = this.handleAnswer.bind(this);
@@ -19,14 +20,12 @@ class Host extends React.Component {
         });
 
         this.socket.on('getInfo', (data) => {
-            console.log(data);
             this.setState({ roomid: data.roomid });
             this.setState({ roomURL: "http://localhost:3000/guest?roomid=" + data.roomid })
             this.setState({ players: [{ id: data.roomid, name: this.props.location.state.name }] });
         });
 
         this.socket.on('getPlayers', (data) => {
-            console.log(data);
             if (this.state.view == 1) {
                 this.setState({ players: data.players })
             }
@@ -34,39 +33,75 @@ class Host extends React.Component {
 
         this.socket.on('startGame', (data) => {
             this.setState({ players: data.players }, () => {
-                this.setState({ view: 2 });
+                this.setState({ theme: data.theme }, () => {
+                    this.setState({ view: 2 });
+                });
             });
         });
 
         this.socket.on('sendAns', (data) => {
-            console.log(data);
             var update_players = this.state.players;
             for (let i=0; i<update_players.length; i++) {
                 if (update_players[i].id == data.playerid) {
                     update_players[i].answer = data.answer;
-                    const player = update_players[i];
-                    update_players.splice(i);
-                    update_players.unshift(player);
+                    const update_player = update_players[i];
+                    update_players.splice(i, 1);
+                    update_players.unshift(update_player);
                     break;
                 }
             }
-            console.log(update_players);
             this.setState({ players: update_players });
         });
     }
 
     setStart() {
         console.log('start');
-        this.socket.emit('setStart', {
-            roomid: this.state.roomid
+        getUser((user) => {
+            fetch('/api/theme', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: user.email
+                })
+            }).then(res => { 
+                res.json().then(data => {
+                    this.setState({ themeid: data.id }, () => {
+                        this.socket.emit('setStart', {
+                            roomid: this.state.roomid,
+                            theme: data.theme
+                        });    
+                    });     
+                })
+            });
         });
     }
 
     openAns(playerid) {
-        console.log('openAns');
         this.socket.emit('getAns', {
             roomid: this.state.roomid,
             id: playerid
+        });
+    }
+
+    submitAns(playerid) {
+        const player = this.state.players.find((p) => p.id == playerid);
+        console.log(player);
+        getUser((user) => {
+            fetch('/api/answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: user.email,
+                    themeid: this.state.themeid,
+                    answer: player.answer
+                })
+            }).then(res => {
+                this.setStart();
+            });
         });
     }
 
@@ -91,6 +126,7 @@ class Host extends React.Component {
                 <td class="playerName">{player.name}</td>
                 <td class="playerAnswer">{player.answer}</td>
                 <td><a class="open" onClick={() => {this.openAns(player.id)}}>答えを見る</a></td>
+                <td><a class="correct" onClick={() => {this.submitAns(player.id)}}>これ正解！</a></td>
             </tr>
         )
     }    
@@ -115,7 +151,8 @@ class Host extends React.Component {
             
             case 2:
                 return (
-                    <><table>
+                    <><h2>{this.state.theme}</h2>
+                    <table>
                         {this.setPlayerTexts()}
                     </table>
                     <form>

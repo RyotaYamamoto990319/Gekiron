@@ -5,29 +5,25 @@ const db = require('../models/');
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert(
-      'tasks',
+      'themes',
       [
         {
-          task: 'Write the blog article',
-          done: false,
+          content: "「く」で始まる時代劇でよく聞く言葉は？",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          task: 'Purchase new laptop PC',
-          done: false,
+          content: "「し」で始まるお酒に合うおつまみは？",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          task: 'Go to swim',
-          done: false,
+          content: "「い」で始まる唇がセクシーな芸能人は？",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          task: 'Order a pizza',
-          done: true,
+          content: "「か」で始まる日本の名曲は？",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

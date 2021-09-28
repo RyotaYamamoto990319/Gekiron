@@ -21,7 +21,7 @@ export default class SignIn extends React.Component {
                     パスワード<input name="password" type="password" required/>
                 </div>
             </form>
-            <button onClick={this.handleSubmit}>ログイン</button>
+            <button onClick={() => {this.handleSubmit()}}>ログイン</button>
             </div>
         )
     }

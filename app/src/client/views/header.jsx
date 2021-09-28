@@ -6,7 +6,6 @@ export default class Header extends React.Component {
     componentDidMount(){
         getUser((user) => {
             if(user) {
-                console.log("setState");
                 this.setState({isLogin:true});
             } else {
                 this.setState({isLogin:false});
