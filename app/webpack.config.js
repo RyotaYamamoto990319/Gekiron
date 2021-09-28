@@ -6,7 +6,7 @@ const htmlWebpackPlugin = new HtmlWebPackPlugin({
   filename: "./index.html"
 });
  module.exports = {
-  entry: "./src/client/index.js",
+  entry: "./src/client/app.jsx",
   output: {
     path: path.resolve('dist'),
     filename: '[name].js'
@@ -14,10 +14,14 @@ const htmlWebpackPlugin = new HtmlWebPackPlugin({
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.jsx$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+            plugins: ['@babel/plugin-transform-runtime'],
+          }
         }
       },
       {
