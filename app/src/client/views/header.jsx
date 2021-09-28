@@ -22,7 +22,6 @@ export default class Header extends React.Component {
     };
 
     render() {
-        console.log("render");
         if(this.state.isLogin) {
             return (
                 <header>
