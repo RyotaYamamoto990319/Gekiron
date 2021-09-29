@@ -1,6 +1,6 @@
-# react-express-mysql-template
+# Gekiron（仮）
 
-React, Express, MySQLを用いたWeb開発のテンプレート．
+部屋にいる人に対してお題を提示し，各々が答えを考える．出た答えの中から「正解」を議論する．
 
 ## Build Environment
 ### Requirements
