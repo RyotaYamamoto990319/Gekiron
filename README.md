@@ -75,9 +75,3 @@ docker-compose up -d
 ```sh
 docker-compose exec mysql mysql -uroot -p
 ```
-
-## References
-- https://qiita.com/ohs30359-nobuhara/items/bdc06b2db1bef7af2439
-- https://ishida-it.com/blog/post/2019-11-21-docker-nodejs/
-- https://ishida-it.com/blog/post/2019-11-22-docker-nodejs-vscode/
-- https://ishida-it.com/blog/post/2019-11-23-docker-nodejs-mysql/
